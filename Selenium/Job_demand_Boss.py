@@ -17,7 +17,7 @@ class Crawler:
         self.options.add_experimental_option("detach", True)
         self.driver = webdriver.Chrome(options=self.options)
         self.job_link = []
-        self.job_command = []
+        self.job_demand = []
 
     def __del__(self):
         self.driver.close()
@@ -60,7 +60,7 @@ class Crawler:
             else:
                 self.job_link.append(link)
 
-    def get_command(self):
+    def get_demand(self):
         """
             该方法用于打开获取的每个链接
             获取每个网页的工作要求
@@ -72,8 +72,8 @@ class Crawler:
             time.sleep(1)
             try:
                 WebDriverWait(self.driver, timeout=20).until(lambda d: self.driver.find_element(By.CSS_SELECTOR, '#main > div.job-box > div > div.job-detail > div:nth-child(1) > div.job-sec-text'))
-                command = self.driver.find_element(By.CSS_SELECTOR, '#main > div.job-box > div > div.job-detail > div:nth-child(1) > div.job-sec-text').text
-                print(command, end='\n')
+                demand = self.driver.find_element(By.CSS_SELECTOR, '#main > div.job-box > div > div.job-detail > div:nth-child(1) > div.job-sec-text').text
+                print(demand, end='\n')
             except NoSuchElementException:
                 print("无法获取该元素")
             except TimeoutException:
@@ -81,14 +81,14 @@ class Crawler:
             except UnicodeError:
                 print("未知编码")
             else:
-                self.job_command.append(command)
+                self.job_demand.append(demand)
 
     def save_(self):
         """
             该方法用于保存获取到的工作需求
         """
-        with open("D:\\command.txt", "a+") as f:
-            for i in self.job_command:
+        with open("D:\\demand.txt", "a+") as f:
+            for i in self.job_demand:
                 try:
                     f.write(i + '\n\n\n')
                 except UnicodeError:
@@ -96,7 +96,7 @@ class Crawler:
 
     def action(self):
         self.open_()
-        self.get_command()
+        self.get_demand()
         self.save_()
 
 
